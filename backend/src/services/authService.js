@@ -7,30 +7,27 @@ import Session from '../models/Session.js';
 const ACCESS_TOKEN_EXPIRATION = '30m';
 const REFRESH_TOKEN_EXPIRATION = 14 * 24 * 60 * 60 * 1000; // 14 days
 
-export const register = async ({ username, email, password, firstName, lastName }) => {
-	if (!username || !email || !password || !firstName || !lastName) {
+export const register = async ({ email, password, firstName, lastName }) => {
+	if (!email || !password || !firstName || !lastName) {
 		throw new Error('Không thể thiếu thông tin tài khoản');
 	}
 
-	const existingUser = await User.findOne({ $or: [{ email }, { username }] });
+	const existingUser = await User.findOne({ $or: [{ email }] });
 	if (existingUser) {
-		throw new Error('Username hoặc email đã tồn tại');
+		throw new Error('Email đã tồn tại');
 	}
 
 	const hashedPassword = await bcrypt.hash(password, 10);
 
 	let finalDisplayName = `${firstName || ''} ${lastName || ''}`.trim();
-	if (!finalDisplayName) {
-		finalDisplayName = username;
-	}
 
-	const user = await User.create({ username, email, password: hashedPassword, displayName: finalDisplayName });
+	const user = await User.create({ email, password: hashedPassword, displayName: finalDisplayName });
 
 	return user;
 };
 
-export const login = async ({ username, email, password }) => {
-	const user = await User.findOne({ $or: [{ email }, { username }] });
+export const login = async ({ email, password }) => {
+	const user = await User.findOne({ $or: [{ email }] });
 	if (!user) {
 		throw new Error('Không tìm thấy người dùng');
 	}

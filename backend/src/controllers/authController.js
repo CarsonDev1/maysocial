@@ -4,9 +4,9 @@ const REFRESH_TOKEN_EXPIRATION = 14 * 24 * 60 * 60 * 1000; // 14 days
 
 export const registerController = async (req, res) => {
 	try {
-		const { username, email, password, firstName, lastName } = req.body;
-		const user = await authService.register({ username, email, password, firstName, lastName });
-		res.status(201).json({ user });
+		const { email, password, firstName, lastName } = req.body;
+		const user = await authService.register({ email, password, firstName, lastName });
+		res.status(201).json({ message: 'Đăng ký thành công', user });
 	} catch (error) {
 		console.error('Register error:', error);
 		res.status(500).json({ message: error.message });
@@ -15,8 +15,8 @@ export const registerController = async (req, res) => {
 
 export const loginController = async (req, res) => {
 	try {
-		const { username, email, password } = req.body;
-		const { accessToken, refreshToken } = await authService.login({ username, email, password });
+		const { email, password } = req.body;
+		const { accessToken, refreshToken } = await authService.login({ email, password });
 		res.cookie('refreshToken', refreshToken, {
 			httpOnly: true,
 			sameSite: 'none',

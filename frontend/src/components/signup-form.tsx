@@ -8,6 +8,8 @@ import { Input } from '@/components/ui/input';
 import { GoogleAuthButton } from './google-auth-button';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useAuthStore } from '@/stores/useAuthStore';
+import { useNavigate } from 'react-router';
 import z from 'zod';
 
 const signupSchema = z
@@ -30,8 +32,10 @@ const signupSchema = z
 type signupFormValues = z.infer<typeof signupSchema>;
 
 export function SignupForm({ className, ...props }: React.ComponentProps<'div'>) {
+	const { signUp } = useAuthStore();
 	const [showPassword, setShowPassword] = useState(false);
 	const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+	const navigate = useNavigate();
 	const {
 		register,
 		handleSubmit,
@@ -47,7 +51,19 @@ export function SignupForm({ className, ...props }: React.ComponentProps<'div'>)
 		},
 	});
 
-	const onSubmit = async (data: signupFormValues) => {};
+	const onSubmit = async (data: signupFormValues) => {
+		try {
+			await signUp({
+				password: data.password,
+				email: data.email,
+				firstName: data.firstName,
+				lastName: data.lastName,
+			});
+			navigate('/login');
+		} catch (error) {
+			console.log(error);
+		}
+	};
 
 	return (
 		<div className={cn('flex flex-col gap-6', className)} {...props}>
@@ -161,7 +177,9 @@ export function SignupForm({ className, ...props }: React.ComponentProps<'div'>)
 								</Field>
 							</Field>
 							<Field>
-								<Button type='submit'>Tạo tài khoản</Button>
+								<Button type='submit' disabled={isSubmitting}>
+									{isSubmitting ? 'Đang tạo tài khoản...' : 'Tạo tài khoản'}
+								</Button>
 							</Field>
 							<FieldSeparator className='*:data-[slot=field-separator-content]:bg-card'>
 								Hoặc tiếp tục với
