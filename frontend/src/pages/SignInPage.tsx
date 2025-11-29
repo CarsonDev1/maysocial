@@ -1,8 +1,14 @@
+import { LoginForm } from '@/components/login-form';
 
 const SignInPage = () => {
-  return (
-    <div>SignInPage</div>
-  )
-}
+	return (
+		<div className='bg-muted relative flex min-h-svh flex-col items-center justify-center p-6 md:p-10'>
+			<div className='absolute inset-0 z-0 radient-bg' />
+			<div className='w-full max-w-sm md:max-w-4xl relative'>
+				<LoginForm />
+			</div>
+		</div>
+	);
+};
 
-export default SignInPage
+export default SignInPage;

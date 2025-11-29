@@ -9,7 +9,7 @@ import { GoogleAuthButton } from './google-auth-button';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useAuthStore } from '@/stores/useAuthStore';
-import { useNavigate } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import z from 'zod';
 
 const signupSchema = z
@@ -189,9 +189,9 @@ export function SignupForm({ className, ...props }: React.ComponentProps<'div'>)
 							</Field>
 							<FieldDescription className='text-center'>
 								Đã có tài khoản?{' '}
-								<a className='text-slate-600' href='#'>
+								<Link className='text-slate-600' to='/login'>
 									Đăng nhập
-								</a>
+								</Link>
 							</FieldDescription>
 						</FieldGroup>
 					</form>
